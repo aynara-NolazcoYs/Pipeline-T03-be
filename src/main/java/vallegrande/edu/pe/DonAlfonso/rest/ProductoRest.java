@@ -30,7 +30,7 @@ public class ProductoRest {
     }
 
     @GetMapping("/state/{estado}")
-    @Operation(summary = "Get Producto By STATE", description = "Get Cuustomer By STATE")
+    @Operation(summary = "Get Producto By STATE", description = "Get Producto By STATE")
     public List<Producto> findByEstado(@PathVariable String estado) {
         return productoService.findByEstado(estado);
     }
@@ -66,4 +66,3 @@ public class ProductoRest {
         return productoService.restore(id);
     }
 }
-

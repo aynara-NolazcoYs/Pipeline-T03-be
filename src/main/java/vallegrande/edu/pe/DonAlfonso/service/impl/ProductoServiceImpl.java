@@ -13,12 +13,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class ProductoServicelmpl implements ProductoService {
+public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
 
     @Autowired
-    public ProductoServicelmpl(ProductoRepository productoRepository) {
+    public ProductoServiceImpl(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
 

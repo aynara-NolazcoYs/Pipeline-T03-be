@@ -1,0 +1,126 @@
+-- Verifica si la base de datos DonAlfonsoDB existe; si no, la crea
+IF DB_ID('DonAlfonsoDB') IS NULL
+BEGIN
+    CREATE DATABASE DonAlfonsoDB;
+END
+GO
+
+-- Selecciona la base de datos DonAlfonsoDB para trabajar en ella
+USE DonAlfonsoDB;
+GO
+
+-- Verifica si la tabla CLIENTE existe; si existe, la elimina
+IF OBJECT_ID('dbo.CLIENTE', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE dbo.CLIENTE;
+END
+GO
+
+-- Crea la tabla CLIENTE con sus columnas y tipos de datos
+CREATE TABLE dbo.CLIENTE (
+    identificador INT IDENTITY(1,1) NOT NULL PRIMARY KEY, -- Clave primaria autoincremental
+    nombre VARCHAR(150) NOT NULL,                          -- Nombre del cliente
+    celular CHAR(9) NOT NULL,                              -- Número de celular (9 dígitos)
+    correo VARCHAR(150) NOT NULL,                          -- Correo electrónico
+    ruc CHAR(11) NOT NULL,                                 -- RUC del cliente (11 dígitos)
+    direccion VARCHAR(200) NOT NULL,                       -- Dirección del cliente
+    estado CHAR(1) NOT NULL DEFAULT 'A'                   -- Estado del cliente: 'A'ctivo o 'I'nactivo, por defecto 'A'
+);
+GO
+
+-- Agrega una restricción CHECK para validar que el estado solo pueda ser 'A' o 'I'
+ALTER TABLE dbo.CLIENTE
+ADD CONSTRAINT CK_CLIENTE_ESTADO
+CHECK (estado IN ('A', 'I'));
+GO
+
+-- Agrega una restricción UNIQUE para que el RUC sea único en la tabla
+ALTER TABLE dbo.CLIENTE
+ADD CONSTRAINT UQ_CLIENTE_RUC UNIQUE (ruc);
+GO
+
+-- Inserta datos de ejemplo en la tabla CLIENTE
+INSERT INTO dbo.CLIENTE (nombre, celular, correo, ruc, direccion, estado) VALUES
+('Juan Perez', '987654321', 'juan.perez@gmail.com', '20123456789', 'Av. Los Olivos 123', 'A'),
+('Maria Torres', '987654322', 'maria.torres@gmail.com', '20987654321', 'Jr. Lima 456', 'A'),
+('Carlos Rojas', '987654323', 'carlos.rojas@gmail.com', '20456789123', 'Calle Real 789', 'A'),
+('Ana Chavez', '987654324', 'ana.chavez@gmail.com', '20111222333', 'Psje. Union 101', 'I'),
+('Pedro Salazar', '987654325', 'pedro.salazar@gmail.com', '20888777666', 'Av. Sol 202', 'A'),
+('Lucia Fernandez', '987654326', 'lucia.fernandez@gmail.com', '20777666555', 'Jr. Amazonia 303', 'A'),
+('Miguel Huaman', '987654327', 'miguel.huaman@gmail.com', '20666555444', 'Av. Grau 404', 'I'),
+('Rosa Diaz', '987654328', 'rosa.diaz@gmail.com', '20555444333', 'Calle Bolivia 505', 'A'),
+('Jorge Mendoza', '987654329', 'jorge.mendoza@gmail.com', '20444333222', 'Jr. Peru 606', 'A'),
+('Elena Flores', '987654330', 'elena.flores@gmail.com', '20333222111', 'Av. Central 707', 'I');
+GO
+
+-- Selecciona todos los registros de la tabla CLIENTE
+-- Esto permite ver los datos que acabamos de insertar
+SELECT *
+FROM dbo.CLIENTE
+ORDER BY identificador; -- Ordena los resultados por la clave primaria para mayor claridad
+GO
+
+-- Verifica si la tabla PRODUCTOS existe; si existe, la elimina
+IF OBJECT_ID('dbo.PRODUCTOS', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE dbo.PRODUCTOS;
+END
+GO
+
+-- Crea la tabla PRODUCTOS con sus columnas y tipos de datos
+CREATE TABLE dbo.PRODUCTOS (
+    id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,           -- Clave primaria autoincremental
+    nombre VARCHAR(100) NOT NULL,                            -- Nombre del producto
+    descripcion VARCHAR(255),                                -- Descripción del producto
+    tipo VARCHAR(50),                                        -- Tipo de producto
+    stock VARCHAR(50),                                       -- Stock disponible
+    estado CHAR(1) NOT NULL DEFAULT 'A',                     -- Estado: 'A'ctivo o 'I'nactivo
+    created_at DATETIME DEFAULT GETDATE(),                   -- Fecha de creación
+    updated_at DATETIME,                                     -- Fecha de actualización
+    deleted_at DATETIME,                                     -- Fecha de eliminación lógica
+    restored_at DATETIME                                     -- Fecha de restauración
+);
+GO
+
+-- Agrega una restricción CHECK para validar que el estado solo pueda ser 'A' o 'I'
+ALTER TABLE dbo.PRODUCTOS
+ADD CONSTRAINT CK_PRODUCTOS_ESTADO
+CHECK (estado IN ('A', 'I'));
+GO
+
+-- Inserta datos de ejemplo en la tabla PRODUCTOS
+INSERT INTO dbo.PRODUCTOS (nombre, descripcion, tipo, stock, estado, created_at) VALUES
+('Naranja Valencia', 'Naranja fresca Valencia de excelente calidad', 'Cítricos', '500', 'A', GETDATE()),
+('Limón Fresco', 'Limón amarillo recién cosechado', 'Cítricos', '400', 'A', GETDATE()),
+('Mandarina Satsuma', 'Mandarina dulce sin semillas', 'Cítricos', '350', 'A', GETDATE()),
+('Tomate Rojo', 'Tomate rojo maduro para ensaladas', 'Hortalizas', '600', 'A', GETDATE()),
+('Lechuga Fresca', 'Lechuga verde criolla recién cortada', 'Hortalizas', '450', 'A', GETDATE()),
+('Cebolla Blanca', 'Cebolla blanca para cocina', 'Hortalizas', '550', 'A', GETDATE()),
+('Pepino Criollo', 'Pepino fresco y crocante', 'Hortalizas', '300', 'I', GETDATE()),
+('Manzana Verde', 'Manzana verde Granny Smith', 'Frutas', '480', 'A', GETDATE()),
+('Palta Hass', 'Palta Hass madura para cosechar', 'Frutas', '200', 'A', GETDATE()),
+('Pimienta Dulce', 'Pimienta roja para ensaladas', 'Hortalizas', '250', 'A', GETDATE());
+GO
+
+-- Selecciona todos los registros de la tabla PRODUCTOS
+SELECT *
+FROM dbo.PRODUCTOS
+ORDER BY id;
+
+-- Ejemplo de como agregar un producto
+{
+"nombre": "Naranja Valencia",
+"descripcion": "Naranja fresca para jugo",
+"tipo": "Cítricos",
+"stock": "100"
+}
+
+
+-- Ejemplo de como agregar un cliente
+{
+  "nombre": "Cristiano Ronaldo",
+  "celular": "987654321",
+  "correo": "cr7@gmail.com",
+  "ruc": "20123456780",
+  "direccion": "Av. Los Olivos 123"
+}
