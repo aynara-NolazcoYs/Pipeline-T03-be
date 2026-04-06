@@ -106,6 +106,18 @@ GO
 SELECT *
 FROM dbo.PRODUCTOS
 ORDER BY id;
+-- Crear la tabla TRABAJADOR
+CREATE TABLE dbo.TRABAJADOR (
+    identificador INT IDENTITY(1,1) PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    celular CHAR(9) NOT NULL,
+    cargo VARCHAR(50) NOT NULL,
+    numero_documento CHAR(8) NOT NULL,
+    fecha_ingreso DATE NOT NULL,
+    estado CHAR(1) NOT NULL DEFAULT 'A'
+);
+GO
+
 
 -- Ejemplo de como agregar un producto
 {
