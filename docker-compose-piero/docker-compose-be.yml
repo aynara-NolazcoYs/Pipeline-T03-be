@@ -1,0 +1,46 @@
+# docker compose -f docker-compose-be.yml up -d --build
+# docker-compose -f docker-compose-be.yml down
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server
+    environment:
+      SA_PASSWORD: "Admin12345*"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - my-network
+
+  backend:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: donalfonso-backend:local
+    container_name: springboot-sqlserver
+    ports:
+      - "8400:8090"
+    environment:
+      PORT: 8090
+      SERVER_URL: http://localhost:8400
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=DonAlfonsoDB;encrypt=true;trustServerCertificate=true
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: Admin12345*
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      DATABASE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=DonAlfonsoDB;encrypt=true;trustServerCertificate=true
+      DATABASE_USERNAME: sa
+      DATABASE_PASSWORD: Admin12345*
+      DATABASE_DRIVER: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    depends_on:
+      - sqlserver
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
