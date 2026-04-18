@@ -118,6 +118,26 @@ CREATE TABLE dbo.TRABAJADOR (
 );
 GO
 
+-- Inserta datos de ejemplo en la tabla TRABAJADOR
+INSERT INTO dbo.TRABAJADOR (nombre, celular, cargo, numero_documento, fecha_ingreso, estado) VALUES
+('Luis Torres', '987654331', 'Administrador', '12345678', '2024-01-15', 'A'),
+('Maria Lopez', '987654332', 'Cajera', '12345679', '2024-02-20', 'A'),
+('Carlos Diaz', '987654333', 'Almacenero', '12345670', '2024-03-10', 'A'),
+('Ana Rojas', '987654334', 'Vendedora', '12345671', '2024-04-05', 'A'),
+('Pedro Gomez', '987654335', 'Seguridad', '12345672', '2024-05-18', 'I'),
+('Lucia Perez', '987654336', 'Atencion al Cliente', '12345673', '2024-06-12', 'A'),
+('Miguel Vargas', '987654337', 'Supervisor', '12345674', '2024-07-01', 'A'),
+('Rosa Castillo', '987654338', 'Secretaria', '12345675', '2024-08-22', 'A'),
+('Jorge Flores', '987654339', 'Mantenimiento', '12345676', '2024-09-14', 'I'),
+('Elena Ramirez', '987654340', 'Contadora', '12345677', '2024-10-30', 'A');
+GO
+
+-- Selecciona todos los registros de la tabla TRABAJADOR
+SELECT *
+FROM dbo.TRABAJADOR
+ORDER BY identificador;
+GO
+
 
 -- Ejemplo de como agregar un producto
 {
