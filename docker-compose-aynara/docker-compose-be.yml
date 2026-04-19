@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  backend:
+    image: aynaranolazco/springboot-sqlserver:1.0
+    container_name: backend-aynara
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:sqlserver://sql-server:1433;databaseName=DonAlfonsoDB;encrypt=false;trustServerCertificate=true
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=Admin12345
+
+networks:
+  my-network:
+    external: true
