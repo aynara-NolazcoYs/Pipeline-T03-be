@@ -24,7 +24,11 @@ CREATE TABLE dbo.CLIENTE (
     correo VARCHAR(150) NOT NULL,                          -- Correo electrónico
     ruc CHAR(11) NOT NULL,                                 -- RUC del cliente (11 dígitos)
     direccion VARCHAR(200) NOT NULL,                       -- Dirección del cliente
-    estado CHAR(1) NOT NULL DEFAULT 'A'                   -- Estado del cliente: 'A'ctivo o 'I'nactivo, por defecto 'A'
+    estado CHAR(1) NOT NULL DEFAULT 'A',                   -- Estado del cliente: 'A'ctivo o 'I'nactivo, por defecto 'A'
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL,
+    deleted_at DATETIME NULL,
+    restored_at DATETIME NULL
 );
 GO
 
@@ -114,7 +118,11 @@ CREATE TABLE dbo.TRABAJADOR (
     cargo VARCHAR(50) NOT NULL,
     numero_documento CHAR(8) NOT NULL,
     fecha_ingreso DATE NOT NULL,
-    estado CHAR(1) NOT NULL DEFAULT 'A'
+    estado CHAR(1) NOT NULL DEFAULT 'A',
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL,
+    deleted_at DATETIME NULL,
+    restored_at DATETIME NULL
 );
 GO
 

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,6 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -57,4 +61,35 @@ public class Cliente {
     @Pattern(regexp = "^[AI]$", message = "El estado debe ser A o I")
     @Column(name = "estado", nullable = false, length = 1)
     private String estado;
+
+    // Auditoria: fecha y hora cuando se registra el cliente.
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    // Auditoria: fecha y hora de la ultima edicion.
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Auditoria: fecha y hora de eliminacion logica.
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    // Auditoria: fecha y hora de restauracion logica.
+    @Column(name = "restored_at")
+    private LocalDateTime restoredAt;
+
+    // Se ejecuta antes de insertar y registra createdAt.
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        if (this.estado == null || this.estado.isBlank()) {
+            this.estado = "A";
+        }
+    }
+
+    // Se ejecuta antes de actualizar y registra updatedAt.
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

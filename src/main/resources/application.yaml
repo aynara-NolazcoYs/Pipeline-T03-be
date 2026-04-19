@@ -20,20 +20,8 @@ spring:
       mode: never
 
 server:
-  port: ${PORT} #Valor por defecto si PORT no está configurado
-  url: ${SERVER_URL} #Valor por defecto si SERVER_URL no esta configurado
+  port: ${SERVER_PORT:8080}
 
-spring:
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: ${DATABASE_DRIVER}
-  jpa:
-    database-platform: org.hibernate.dialect.SQLServerDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: false
 springdoc:
   api-docs:
     enable: true

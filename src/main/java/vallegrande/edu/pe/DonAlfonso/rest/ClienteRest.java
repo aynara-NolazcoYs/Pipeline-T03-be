@@ -25,37 +25,44 @@ public class ClienteRest {
         this.clienteService = clienteService;
     }
 
+    // Lista todos los clientes (activos e inactivos).
     @GetMapping
     public List<Cliente> listar() {
         return clienteService.listar();
     }
 
+    // Obtiene un cliente por identificador.
     @GetMapping("/{id}")
     public Cliente listarPorId(@PathVariable Integer id) {
         return clienteService.listarPorId(id);
     }
 
+    // Filtra clientes por estado: A (activo) o I (inactivo).
     @GetMapping("/estado/{estado}")
     public List<Cliente> listarPorEstado(@PathVariable String estado) {
         return clienteService.listarPorEstado(estado);
     }
 
+    // Crea un cliente nuevo y devuelve 201.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente crear(@Valid @RequestBody Cliente cliente) {
         return clienteService.crear(cliente);
     }
 
+    // Actualiza los datos de un cliente existente.
     @PutMapping("/{id}")
     public Cliente editar(@PathVariable Integer id, @Valid @RequestBody Cliente cliente) {
         return clienteService.editar(id, cliente);
     }
 
+    // Eliminacion logica: cambia estado a I y guarda deletedAt.
     @PatchMapping("/{id}/eliminar")
     public Cliente eliminarLogico(@PathVariable Integer id) {
         return clienteService.eliminarLogico(id);
     }
 
+    // Restauracion logica: cambia estado a A y guarda restoredAt.
     @PatchMapping("/{id}/restaurar")
     public Cliente restaurarLogico(@PathVariable Integer id) {
         return clienteService.restaurarLogico(id);

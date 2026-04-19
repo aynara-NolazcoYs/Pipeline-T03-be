@@ -4,6 +4,7 @@ import vallegrande.edu.pe.DonAlfonso.model.Trabajador;
 import vallegrande.edu.pe.DonAlfonso.repository.TrabajadorRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,7 +28,15 @@ public class TrabajadorService {
         return repository.findByEstado(estado);
     }
 
+    // Registrar: limpia IDs previos y deja auditoria de edicion/eliminacion/restauracion en null.
     public Trabajador crear(Trabajador t) {
+        t.setIdentificador(null);
+        t.setUpdatedAt(null);
+        t.setDeletedAt(null);
+        t.setRestoredAt(null);
+        if (t.getEstado() == null || t.getEstado().isBlank()) {
+            t.setEstado("A");
+        }
         return repository.save(t);
     }
 
@@ -40,6 +49,8 @@ public class TrabajadorService {
         existente.setCargo(t.getCargo());
         existente.setNumeroDocumento(t.getNumeroDocumento());
         existente.setFechaIngreso(t.getFechaIngreso());
+        // Editar: registra fecha y hora de actualizacion.
+        existente.setUpdatedAt(LocalDateTime.now());
 
         return repository.save(existente);
     }
@@ -48,6 +59,8 @@ public class TrabajadorService {
         Trabajador t = listarPorId(id);
         if (t != null) {
             t.setEstado("I");
+            // Eliminar logico: registra fecha y hora de eliminacion.
+            t.setDeletedAt(LocalDateTime.now());
             return repository.save(t);
         }
         return null;
@@ -57,6 +70,8 @@ public class TrabajadorService {
         Trabajador t = listarPorId(id);
         if (t != null) {
             t.setEstado("A");
+            // Restaurar logico: registra fecha y hora de restauracion.
+            t.setRestoredAt(LocalDateTime.now());
             return repository.save(t);
         }
         return null;
