@@ -17,7 +17,7 @@ services:
   backend:
     build:
       context: ..
-      dockerfile: Dockerfile
+      dockerfile: dockerfile-piero/Dockerfile
     image: donalfonso-backend:local
     container_name: springboot-sqlserver
     ports:
