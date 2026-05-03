@@ -1,11 +1,11 @@
 spring:
   application:
-    name: DonAlfonso
+    name: losQueensAgro
 
   datasource:
-    url: jdbc:sqlserver://sql-server:1433;databaseName=DonAlfonsoDB;encrypt=false;trustServerCertificate=true
+    url: jdbc:sqlserver://sql-server:1433;databaseName=losQueensAgroDB;encrypt=false;trustServerCertificate=true
     username: sa
-    password: Admin12345
+    password: losQueens123!
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
@@ -28,6 +28,7 @@ springdoc:
   api-docs:
     enabled: true
     path: /api-docs
+
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
