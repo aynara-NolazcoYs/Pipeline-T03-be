@@ -1,5 +1,5 @@
-# docker compose -f docker-compose/docker-compose-db.yml up -d
-# docker compose -f docker-compose/docker-compose-db.yml down
+# docker compose -f docker-compose-luis/docker-compose-db.yml up -d
+# docker compose -f docker-compose-luis/docker-compose-db.yml down
 version: '3'
 
 services:
@@ -8,7 +8,7 @@ services:
     container_name: sql-server
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Dracobo2026!"
+      SA_PASSWORD: "losQueens123!"
       MSSQL_PID: "Express"
     ports:
       - "1433:1433"

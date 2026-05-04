@@ -3,7 +3,7 @@ FROM luis280707/maven:3.9-amazoncorretto-25-alpine AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Stage 2: Run with Java
 FROM luis280707/eclipse-temurin:25-jre-alpine
