@@ -56,6 +56,8 @@ public class ProductServiceImpl implements ProductService {
         product existente = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
+        existente.setCategory_id(product.getCategory_id());
+        existente.setSupplier_id(product.getSupplier_id());
         existente.setName(product.getName());
         existente.setDescription(product.getDescription());
         existente.setMedia_unit(product.getMedia_unit());

@@ -19,6 +19,15 @@ public class product {
     @Column(name = "id")  //Nombre del campo en la base de datos
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Para que el ID se genere de manera automatica
     private Long id;  //Nombre del atributo en la clase java
+    
+    //ID de la categoría del producto
+    @Column(name = "category_id") //Nombre del campo en la base de datos
+    private Long category_id; //Nombre del atributo en la clase java
+
+    //ID del proveedor del producto
+    @Column(name = "supplier_id") //Nombre del campo en la base de datos
+    private Long supplier_id; //Nombre del atributo en la clase java
+
 
     //Nombre del producto
     @Column(name = "name") //Nombre del campo en la base de datos
