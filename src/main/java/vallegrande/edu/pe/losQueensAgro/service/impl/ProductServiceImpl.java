@@ -43,6 +43,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public product save(product product) {
         product.setId(null);
+        if (product.getCreated_date() == null) {
+            product.setCreated_date(LocalDateTime.now(ZoneId.of("America/Lima")));
+        }
         product.setUpdate_date(null);
         product.setDeleted_date(null);
         product.setRestored_date(null);
