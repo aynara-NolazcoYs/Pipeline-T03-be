@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vallegrande.edu.pe.losQueensAgro.model.product;
 import vallegrande.edu.pe.losQueensAgro.repository.ProductRepository;
 import vallegrande.edu.pe.losQueensAgro.service.ProductService;
+import java.time.ZoneId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
         existente.setExpiration_date(product.getExpiration_date());
         existente.setState(product.getState());
 
-        existente.setUpdate_date(LocalDateTime.now());
+        existente.setUpdate_date(LocalDateTime.now(ZoneId.of("America/Lima")));
 
         return productRepository.save(existente);
     }
@@ -78,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
         product.setState("I");
-        product.setDeleted_date(LocalDateTime.now());
+        product.setDeleted_date(LocalDateTime.now(ZoneId.of("America/Lima")));
 
         return productRepository.save(product);
     }
@@ -88,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
         product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         product.setState("A");
-        product.setRestored_date(LocalDateTime.now());
+        product.setRestored_date(LocalDateTime.now(ZoneId.of("America/Lima")));
 
         return productRepository.save(product);
     }
