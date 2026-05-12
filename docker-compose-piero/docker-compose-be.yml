@@ -1,6 +1,9 @@
 # docker compose -f docker-compose-piero/docker-compose-be.yml up -d --build
 # docker compose -f docker-compose-piero/docker-compose-be.yml down
 
+# si da error por algo de my-network, ejecutar el siguiente comando para crear la red: 
+# docker network create my-network
+
 version: '3'
 
 services:
