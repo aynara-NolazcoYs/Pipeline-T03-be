@@ -21,8 +21,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
+    public List<Supplier> findByStatus(String status) {
+        return repository.findByStatus(status);
+    }
+
+    @Override
     public List<Supplier> findActive() {
-        return repository.findByStatus("A");
+        return repository.findAllNotDeleted();
     }
 
     @Override
@@ -69,6 +74,7 @@ public class SupplierServiceImpl implements SupplierService {
         Supplier existing = findById(id);
         if (existing != null) {
             existing.setStatus("A");
+            existing.setDeletedDate(null);
             existing.setRestoredDate(LocalDateTime.now());
             return repository.save(existing);
         }

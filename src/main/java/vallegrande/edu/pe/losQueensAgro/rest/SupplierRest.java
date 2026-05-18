@@ -20,9 +20,16 @@ public class SupplierRest {
 
     // Listar todos los proveedores activos
     @GetMapping
-    @Operation(summary = "Get All Active Suppliers", description = "Retrieve list of all active suppliers")
+    @Operation(summary = "Get All Suppliers", description = "Retrieve list of all suppliers")
     public List<Supplier> list() {
-        return service.findActive();
+        return service.findAll();
+    }
+
+    // Obtener proveedores por estado
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Get Suppliers By Status", description = "Retrieve suppliers by status")
+    public List<Supplier> findByStatus(@PathVariable String status) {
+        return service.findByStatus(status);
     }
 
     // Obtener un proveedor por ID
