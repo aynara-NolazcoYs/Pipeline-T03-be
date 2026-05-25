@@ -43,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public product save(product product) {
         product.setId(null);
+        validateStock(product);
         if (product.getCreated_date() == null) {
             product.setCreated_date(LocalDateTime.now(ZoneId.of("America/Lima")));
         }
@@ -60,12 +61,14 @@ public class ProductServiceImpl implements ProductService {
         product existente = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
+        validateStock(product);
         existente.setCategory_id(product.getCategory_id());
         existente.setSupplier_id(product.getSupplier_id());
         existente.setName(product.getName());
         existente.setDescription(product.getDescription());
         existente.setMedia_unit(product.getMedia_unit());
         existente.setUnit_price(product.getUnit_price());
+        existente.setStock(product.getStock());
         existente.setExpiration_date(product.getExpiration_date());
         existente.setState(product.getState());
 
@@ -95,5 +98,15 @@ public class ProductServiceImpl implements ProductService {
         product.setRestored_date(LocalDateTime.now(ZoneId.of("America/Lima")));
 
         return productRepository.save(product);
+    }
+
+    private void validateStock(product product) {
+        Integer stock = product.getStock();
+        if (stock == null) {
+            throw new IllegalArgumentException("El stock es obligatorio");
+        }
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo");
+        }
     }
 }

@@ -8,10 +8,11 @@ GO
 
 CREATE TABLE product (
     id BIGINT PRIMARY KEY IDENTITY(1,1),
-    name VARCHAR(255),
+    name VARCHAR(255) UNIQUE,
     description VARCHAR(255),
     media_unit VARCHAR(255),
     unit_price FLOAT,
+    stock INT NOT NULL DEFAULT 0,
     expiration_date DATETIME2,
     state VARCHAR(255),
     created_date DATETIME2,

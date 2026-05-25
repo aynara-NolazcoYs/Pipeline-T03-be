@@ -1,6 +1,7 @@
 package vallegrande.edu.pe.losQueensAgro.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class product {
 
 
     //Nombre del producto
-    @Column(name = "name") //Nombre del campo en la base de datos
+    @Column(name = "name", unique = true) //Nombre del campo en la base de datos
     private String name;   //Nombre del atributo en la clase java
 
     //Descripción del producto
@@ -44,6 +45,11 @@ public class product {
     //Precio unico del producto
     @Column(name = "unit_price")  //Nombre del campo en la base de datos
     private Double unit_price;    //Nombre del atributo en la clase java
+
+    //Stock del producto
+    @PositiveOrZero(message = "El stock no puede ser negativo")
+    @Column(name = "stock")
+    private Integer stock;
 
 
     //Fecha de vencimiento del producto

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperties;
 import org.springframework.web.bind.annotation.*;
 import vallegrande.edu.pe.losQueensAgro.service.ProductService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +52,14 @@ public class ProductRest {
     //Mapperar Endpoint Registrar - tipo POST en POSTMAN
     @PostMapping("/save")
     @Operation(summary = "Save Porduct", description = "Save Product")
-    public product save(@RequestBody product product) {
+    public product save(@Valid @RequestBody product product) {
         return productService.save(product);
     }
 
     //Mapear Endpoint Actualizar - tipo PUT en POSTMAN
     @PutMapping("/update/{id}")
     @Operation(summary = "Update Product", description = "Update Product")
-    public product update(@PathVariable Long id, @RequestBody product product) {
+    public product update(@PathVariable Long id, @Valid @RequestBody product product) {
         return productService.update(id, product);
     }
 
