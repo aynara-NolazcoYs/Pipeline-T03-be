@@ -46,10 +46,10 @@ public class product {
     @Column(name = "unit_price")  //Nombre del campo en la base de datos
     private Double unit_price;    //Nombre del atributo en la clase java
 
-    //Stock del producto
-    @PositiveOrZero(message = "El stock no puede ser negativo")
-    @Column(name = "stock")
-    private Integer stock;
+    //Cantidad del producto
+    @PositiveOrZero(message = "La cantidad no puede ser negativa")
+    @Column(name = "quantity")
+    private Integer quantity;
 
 
     //Fecha de vencimiento del producto

@@ -55,7 +55,7 @@ CREATE TABLE product (
     supplier_id int  NOT NULL,
     name varchar(100)   NOT NULL,
     description varchar(400)  NOT NULL,
-    stock int NOT NULL DEFAULT 0,
+    quantity int NOT NULL DEFAULT 0,
     is_available BIT NOT NULL DEFAULT 1,
     media_unit varchar(100)  NOT NULL,
     unit_price decimal(5,2)  NOT NULL,
@@ -68,10 +68,10 @@ CREATE TABLE product (
     CONSTRAINT product_pk PRIMARY KEY  (id)
 );
 
-/*Alterar la tabla para agregar stock*/
+/*Alterar la tabla para agregar quantity*/
 ALTER TABLE product
-ADD CONSTRAINT chk_product_stock
-CHECK (stock >= 0);
+ADD CONSTRAINT chk_product_quantity
+CHECK (quantity >= 0);
 
 /*Alterar la tabla*/
 ALTER TABLE product ADD CONSTRAINT chk_product_price 

@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public product save(product product) {
         product.setId(null);
-        validateStock(product);
+        validateQuantity(product);
         if (product.getCreated_date() == null) {
             product.setCreated_date(LocalDateTime.now(ZoneId.of("America/Lima")));
         }
@@ -61,17 +61,38 @@ public class ProductServiceImpl implements ProductService {
         product existente = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        validateStock(product);
+        validateQuantity(product);
         existente.setCategory_id(product.getCategory_id());
         existente.setSupplier_id(product.getSupplier_id());
         existente.setName(product.getName());
         existente.setDescription(product.getDescription());
         existente.setMedia_unit(product.getMedia_unit());
         existente.setUnit_price(product.getUnit_price());
-        existente.setStock(product.getStock());
+        existente.setQuantity(product.getQuantity());
         existente.setExpiration_date(product.getExpiration_date());
         existente.setState(product.getState());
 
+        existente.setUpdate_date(LocalDateTime.now(ZoneId.of("America/Lima")));
+
+        return productRepository.save(existente);
+    }
+
+    @Override
+    public product decreaseStock(Long id, Integer quantity) {
+        if (quantity == null || quantity <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
+        }
+
+        product existente = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        validateQuantity(existente);
+
+        if (existente.getQuantity() < quantity) {
+            throw new IllegalArgumentException("Cantidad insuficiente para el producto " + existente.getName());
+        }
+
+        existente.setQuantity(existente.getQuantity() - quantity);
         existente.setUpdate_date(LocalDateTime.now(ZoneId.of("America/Lima")));
 
         return productRepository.save(existente);
@@ -100,13 +121,13 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
-    private void validateStock(product product) {
-        Integer stock = product.getStock();
-        if (stock == null) {
-            throw new IllegalArgumentException("El stock es obligatorio");
+    private void validateQuantity(product product) {
+        Integer quantity = product.getQuantity();
+        if (quantity == null) {
+            throw new IllegalArgumentException("La cantidad es obligatoria");
         }
-        if (stock < 0) {
-            throw new IllegalArgumentException("El stock no puede ser negativo");
+        if (quantity < 0) {
+            throw new IllegalArgumentException("La cantidad no puede ser negativa");
         }
     }
 }
