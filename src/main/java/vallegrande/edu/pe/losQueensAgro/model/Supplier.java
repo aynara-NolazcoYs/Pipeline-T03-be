@@ -38,9 +38,9 @@ public class Supplier {
     @Column(name = "address", length = 200)
     private String address;
 
-    // Campo 8: Estado del proveedor (String) - A: Activo, I: Inactivo
-    @Column(length = 1)
-    private String status;
+    // Campo 8: Estado del proveedor (Boolean) - true: Activo, false: Inactivo
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     // CAMPOS DE AUDITORÍA
 

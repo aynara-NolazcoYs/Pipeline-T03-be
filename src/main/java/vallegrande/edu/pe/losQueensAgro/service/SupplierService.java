@@ -8,7 +8,7 @@ public interface SupplierService {
     List<Supplier> findAll();
     
     // Obtener proveedores por estado
-    List<Supplier> findByStatus(String status);
+    List<Supplier> findByIsActive(Boolean isActive);
     
     // Obtener solo los proveedores activos
     List<Supplier> findActive();

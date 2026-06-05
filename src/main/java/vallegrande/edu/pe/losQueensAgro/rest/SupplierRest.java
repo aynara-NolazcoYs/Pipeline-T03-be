@@ -26,10 +26,10 @@ public class SupplierRest {
     }
 
     // Obtener proveedores por estado
-    @GetMapping("/status/{status}")
+    @GetMapping("/isActive/{isActive}")
     @Operation(summary = "Get Suppliers By Status", description = "Retrieve suppliers by status")
-    public List<Supplier> findByStatus(@PathVariable String status) {
-        return service.findByStatus(status);
+    public List<Supplier> findByIsActive(@PathVariable Boolean isActive) {
+        return service.findByIsActive(isActive);
     }
 
     // Obtener un proveedor por ID
