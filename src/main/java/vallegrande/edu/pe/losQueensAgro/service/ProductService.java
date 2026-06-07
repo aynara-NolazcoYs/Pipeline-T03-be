@@ -17,6 +17,8 @@ public interface ProductService {
 
     product decreaseStock(Long id, Integer quantity);
 
+    product increaseStock(Long id, Integer quantity);
+
     product delete(Long id);
 
     product restore(Long id);

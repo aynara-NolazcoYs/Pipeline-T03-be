@@ -98,6 +98,22 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(existente);
     }
 
+    @Override
+    public product increaseStock(Long id, Integer quantity) {
+        if (quantity == null || quantity <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
+        }
+
+        product existente = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        validateQuantity(existente);
+
+        existente.setQuantity(existente.getQuantity() + quantity);
+        existente.setUpdate_date(LocalDateTime.now(ZoneId.of("America/Lima")));
+
+        return productRepository.save(existente);
+    }
 
     //Realiza eliminación lógica del producto cambiando su estado a inactivo
     @Override
