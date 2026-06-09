@@ -156,7 +156,27 @@ CREATE TABLE warehouse (
     CONSTRAINT warehouse_pk PRIMARY KEY  (id)
 );
 
--- foreign keys
+-- Table: stock
+CREATE TABLE stock (
+    id int IDENTITY(1,1) NOT NULL,
+    product_id int NOT NULL,
+    warehouse_id int NOT NULL,
+    quantity int NOT NULL,
+    last_update datetime NOT NULL,
+    status char(1) NOT NULL,
+    CONSTRAINT stock_pk PRIMARY KEY (id)
+);
+
+-- Reference: stock_product (table: stock)
+ALTER TABLE stock ADD CONSTRAINT stock_product
+    FOREIGN KEY (product_id)
+    REFERENCES product (id);
+
+-- Reference: stock_warehouse (table: stock)
+ALTER TABLE stock ADD CONSTRAINT stock_warehouse
+    FOREIGN KEY (warehouse_id)
+    REFERENCES warehouse (id);
+
 -- Reference: Details_sale_order (table: order_Details)
 ALTER TABLE order_Details ADD CONSTRAINT Details_sale_order
     FOREIGN KEY (sale_order_id)
