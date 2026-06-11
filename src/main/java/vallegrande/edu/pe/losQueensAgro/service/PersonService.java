@@ -1,16 +1,16 @@
 package vallegrande.edu.pe.losQueensAgro.service;
 
-import vallegrande.edu.pe.losQueensAgro.model.Person;
+import vallegrande.edu.pe.losQueensAgro.dto.PersonRequest;
 import java.util.List;
 import java.util.Optional;
 
 public interface PersonService {
-    List<Person> findAll();
-    List<Person> findByState(String state);
-    Optional<Person> findById(Long id);
-    Person save(Person Person);
-    Person update(Long id, Person Person);
-    Person delete(Long id);
-    Person restore(Long id);
+    List<PersonRequest> findAll();
+    List<PersonRequest> findByState(String state);
+    Optional<PersonRequest> findById(Long id);
+    PersonRequest save(PersonRequest personRequest);
+    PersonRequest update(Long id, PersonRequest personRequest);
+    PersonRequest delete(Long id);
+    PersonRequest restore(Long id);
 
 }
