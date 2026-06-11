@@ -2,6 +2,7 @@ package vallegrande.edu.pe.losQueensAgro.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vallegrande.edu.pe.losQueensAgro.model.Supplier;
@@ -42,14 +43,14 @@ public class SupplierRest {
     // Crear un nuevo proveedor (POST)
     @PostMapping
     @Operation(summary = "Create New Supplier", description = "Create a new supplier with provided data - fecha-hora: created_date")
-    public Supplier save(@RequestBody Supplier supplier) {
+    public Supplier save(@Valid @RequestBody Supplier supplier) {
         return service.create(supplier);
     }
 
     // Actualizar un proveedor existente (PUT)
     @PutMapping("/{id}")
     @Operation(summary = "Update Supplier", description = "Update an existing supplier - fecha-hora: update_date")
-    public Supplier update(@PathVariable Integer id, @RequestBody Supplier supplier) {
+    public Supplier update(@PathVariable Integer id, @Valid @RequestBody Supplier supplier) {
         return service.update(id, supplier);
     }
 
