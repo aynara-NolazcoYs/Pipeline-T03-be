@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vallegrande.edu.pe.losQueensAgro.model.StockMovement;
+import vallegrande.edu.pe.losQueensAgro.model.product;
 import vallegrande.edu.pe.losQueensAgro.repository.StockMovementRepository;
 import vallegrande.edu.pe.losQueensAgro.service.PersonService;
 import vallegrande.edu.pe.losQueensAgro.service.ProductService;
@@ -46,10 +47,9 @@ public class StockMovementServiceImpl implements StockMovementService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad del movimiento debe ser estrictamente mayor a cero");
         }
 
-        // Validar que el producto exista
-        if (!productService.findById(movement.getProductId()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El producto con ID " + movement.getProductId() + " no existe");
-        }
+        // Validar que el producto exista y obtenerlo
+        product prod = productService.findById(movement.getProductId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "El producto con ID " + movement.getProductId() + " no existe"));
 
         // Validar que la persona exista
         if (movement.getPersonId() != null && !personService.findById(movement.getPersonId()).isPresent()) {
@@ -60,6 +60,9 @@ public class StockMovementServiceImpl implements StockMovementService {
         if ("E".equalsIgnoreCase(movement.getMovementType())) {
             productService.increaseStock(movement.getProductId(), movement.getQuantity());
         } else if ("S".equalsIgnoreCase(movement.getMovementType())) {
+            if (prod.getQuantity() < movement.getQuantity()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock insuficiente para realizar la salida. Stock actual: " + prod.getQuantity() + ", Cantidad solicitada: " + movement.getQuantity());
+            }
             productService.decreaseStock(movement.getProductId(), movement.getQuantity());
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de movimiento inválido (debe ser 'E' o 'S')");
