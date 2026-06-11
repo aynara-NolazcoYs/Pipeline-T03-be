@@ -41,6 +41,11 @@ public class StockMovementServiceImpl implements StockMovementService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipo de movimiento, cantidad y producto son obligatorios");
         }
 
+        // Validar que la cantidad sea mayor a cero
+        if (movement.getQuantity() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad del movimiento debe ser estrictamente mayor a cero");
+        }
+
         // Validar que el producto exista
         if (!productService.findById(movement.getProductId()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El producto con ID " + movement.getProductId() + " no existe");
