@@ -1,5 +1,6 @@
 package vallegrande.edu.pe.losQueensAgro.service.impl;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import vallegrande.edu.pe.losQueensAgro.dto.PersonRequest;
 import vallegrande.edu.pe.losQueensAgro.model.Person;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public PersonServiceImpl(PersonRepository personRepository) {
         this.personRepository = personRepository;
@@ -68,7 +70,8 @@ public class PersonServiceImpl implements PersonService {
         person.setEmail(personRequest.getEmail());
         person.setRole(personRequest.getRole());
         person.setStreet(personRequest.getStreet());
-        person.setPassword(personRequest.getPassword());
+        // Hashear la contraseña antes de guardar
+        person.setPassword(passwordEncoder.encode(personRequest.getPassword()));
         person.setState(personRequest.getState() != null ? personRequest.getState() : "A");
         person.setCreated_date(LocalDateTime.now());
 
@@ -103,7 +106,10 @@ public class PersonServiceImpl implements PersonService {
         existente.setEmail(personRequest.getEmail());
         existente.setRole(personRequest.getRole());
         existente.setStreet(personRequest.getStreet());
-        existente.setPassword(personRequest.getPassword());
+        // Hashear la nueva contraseña solo si fue enviada
+        if (personRequest.getPassword() != null && !personRequest.getPassword().isBlank()) {
+            existente.setPassword(passwordEncoder.encode(personRequest.getPassword()));
+        }
         existente.setState(personRequest.getState());
         existente.setUpdate_date(LocalDateTime.now());
 
@@ -137,7 +143,8 @@ public class PersonServiceImpl implements PersonService {
         return convertToRequest(restored);
     }
 
-    // Método auxiliar para convertir Person a PersonRequest
+   
+    // La contraseña NO se incluye en la respuesta por seguridad
     private PersonRequest convertToRequest(Person person) {
         return PersonRequest.builder()
                 .ubigeo_code(person.getUbigeo_code())
@@ -149,7 +156,7 @@ public class PersonServiceImpl implements PersonService {
                 .email(person.getEmail())
                 .role(person.getRole())
                 .street(person.getStreet())
-                .password(person.getPassword())
+                .password(null) // No exponer la contraseña hasheada en las respuestas
                 .state(person.getState())
                 .build();
     }
