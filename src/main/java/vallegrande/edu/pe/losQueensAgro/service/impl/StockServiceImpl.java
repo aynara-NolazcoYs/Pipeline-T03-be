@@ -42,54 +42,62 @@ public class StockServiceImpl implements StockService {
     @Transactional
     public Stock createOrUpdateStock(StockTransactionRequest request) {
 
-        // Validar que la cantidad sea mayor a cero
-        if (request.getQuantity() == null || request.getQuantity() <= 0) {
+        
+    // Validar que la cantidad sea mayor a cero
+    if (request.getQuantity() == null || request.getQuantity() <= 0) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "La cantidad debe ser mayor a cero");
+    }
+
+    // Validar que el producto existe
+    product prod = productService.findById(request.getProductId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El producto con ID " + request.getProductId() + " no existe"));
+
+    // Validar que el producto esté activo
+    if (!"A".equalsIgnoreCase(prod.getState())) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "El producto '" + prod.getName() + "' no está activo y no puede operar en stock");
+    }
+
+    // Buscar si ya existe stock para este producto en este almacén
+    Optional<Stock> existingStock = stockRepository.findByProductIdAndWarehouseId(
+            request.getProductId(),
+            request.getWarehouseId()
+    );
+
+    Stock stock;
+
+    if (existingStock.isPresent()) {
+        stock = existingStock.get();
+
+        // Validar que el stock resultante no sea negativo
+        int nuevoTotal = stock.getQuantity() + request.getQuantity();
+
+        if (nuevoTotal < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "La cantidad debe ser mayor a cero");
+                    "La operación dejaría el stock en negativo. Stock actual: "
+                            + stock.getQuantity() + ", Cambio solicitado: " + request.getQuantity());
         }
 
-        // Validar que el producto existe
-        product prod = productService.findById(request.getProductId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "El producto con ID " + request.getProductId() + " no existe"));
+        stock.setQuantity(nuevoTotal);
+        stock.setLastUpdate(now());
 
-        // Validar que el producto esté activo
-        if (!"A".equalsIgnoreCase(prod.getState())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "El producto '" + prod.getName() + "' no está activo y no puede operar en stock");
-        }
+    } else {
+        // Crear nuevo registro de stock
+        stock = Stock.builder()
+                .productId(request.getProductId())
+                .warehouseId(request.getWarehouseId())
+                .quantity(request.getQuantity())
+                .lastUpdate(now())
+                .status("A")
+                .build();
+    }
 
-        // Buscar si ya existe stock para este producto en este almacén
-        Optional<Stock> existingStock = stockRepository.findByProductIdAndWarehouseId(
-                request.getProductId(),
-                request.getWarehouseId()
-        );
-
-        Stock stock;
-        if (existingStock.isPresent()) {
-            stock = existingStock.get();
-
-            // Validar que el stock resultante no sea negativo
-            int nuevoTotal = stock.getQuantity() + request.getQuantity();
-            if (nuevoTotal < 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "La operación dejaría el stock en negativo. Stock actual: "
-                        + stock.getQuantity() + ", Cambio solicitado: " + request.getQuantity());
-            }
-
-            stock.setQuantity(nuevoTotal);
-            stock.setLastUpdate(LocalDateTime.now());
-        } else {
-            // Crear nuevo registro de stock
-            stock = Stock.builder()
-                    .productId(request.getProductId())
-                    .warehouseId(request.getWarehouseId())
-                    .quantity(request.getQuantity())
-                    .lastUpdate(LocalDateTime.now())
-                    .status("A")
-                    .build();
-        }
-
-        return stockRepository.save(stock);
+    return stockRepository.save(stock);
+}
+       private LocalDateTime now() {
+        return LocalDateTime.now();
     }
 }
+
