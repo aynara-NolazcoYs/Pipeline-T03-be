@@ -147,6 +147,7 @@ public class PersonServiceImpl implements PersonService {
     // La contraseña NO se incluye en la respuesta por seguridad
     private PersonRequest convertToRequest(Person person) {
         return PersonRequest.builder()
+                .id(person.getId())
                 .ubigeo_code(person.getUbigeo_code())
                 .name(person.getName())
                 .last_name(person.getLast_name())

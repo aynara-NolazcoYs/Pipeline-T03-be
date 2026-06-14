@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PersonRequest {
 
+    private Long id; 
+    
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 100, message = "El nombre debe tener entre 2 y 100 caracteres")
     @Pattern(regexp = "^[a-záéíóúñA-ZÁÉÍÓÚÑ\\s]+$", message = "El nombre solo debe contener letras y espacios, sin números ni caracteres especiales")
