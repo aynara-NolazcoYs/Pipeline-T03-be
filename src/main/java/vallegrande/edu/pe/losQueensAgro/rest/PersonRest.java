@@ -1,6 +1,7 @@
 package vallegrande.edu.pe.losQueensAgro.rest;
 
 import vallegrande.edu.pe.losQueensAgro.dto.PersonRequest;
+import vallegrande.edu.pe.losQueensAgro.dto.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -94,6 +95,18 @@ public class PersonRest {
             return ResponseEntity.ok(restored);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    //Mapear Endpoint Login - tipo POST en POSTMAN
+    @PostMapping("/login")
+    @Operation(summary = "Login Person", description = "Validate user credentials (only active ADMIN users)")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            PersonRequest response = personService.login(loginRequest);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("message", e.getMessage()));
         }
     }
 

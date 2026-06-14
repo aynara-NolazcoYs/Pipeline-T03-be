@@ -3,6 +3,7 @@ package vallegrande.edu.pe.losQueensAgro.service.impl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import vallegrande.edu.pe.losQueensAgro.dto.PersonRequest;
+import vallegrande.edu.pe.losQueensAgro.dto.LoginRequest;
 import vallegrande.edu.pe.losQueensAgro.model.Person;
 import vallegrande.edu.pe.losQueensAgro.repository.PersonRepository;
 import vallegrande.edu.pe.losQueensAgro.service.PersonService;
@@ -145,6 +146,26 @@ public class PersonServiceImpl implements PersonService {
 
         Person restored = personRepository.save(person);
         return convertToRequest(restored);
+    }
+
+    @Override
+    public PersonRequest login(LoginRequest loginRequest) {
+        Person person = personRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("El correo electrónico no existe"));
+
+        if (!"ADMIN".equals(person.getRole())) {
+            throw new RuntimeException("Acceso denegado: Solo los administradores pueden iniciar sesión");
+        }
+
+        if (!"A".equals(person.getState())) {
+            throw new RuntimeException("Su cuenta está inactiva");
+        }
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), person.getPassword())) {
+            throw new RuntimeException("La contraseña es incorrecta");
+        }
+
+        return convertToRequest(person);
     }
 
    
