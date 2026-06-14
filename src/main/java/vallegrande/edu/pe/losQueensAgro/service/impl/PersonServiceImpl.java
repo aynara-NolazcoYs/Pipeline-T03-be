@@ -51,33 +51,36 @@ public class PersonServiceImpl implements PersonService {
     // Guardar nueva persona
     @Override
     public PersonRequest save(PersonRequest personRequest) {
+        String email = safeTrim(personRequest.getEmail());
+        String docNum = safeTrim(personRequest.getDocument_number());
+
         // Validar que el email no exista
-        if (personRepository.findByEmail(personRequest.getEmail()).isPresent()) {
+        if (email != null && personRepository.findByEmail(email).isPresent()) {
             throw new RuntimeException("El correo electrónico ya está registrado");
         }
 
         // Validar que el documento no exista
-        if (personRepository.findByDocumentNumber(personRequest.getDocument_number()).isPresent()) {
+        if (docNum != null && personRepository.findByDocumentNumber(docNum).isPresent()) {
             throw new RuntimeException("El número de documento ya está registrado");
         }
 
         Person person = new Person();
-        person.setUbigeo_code(personRequest.getUbigeo_code());
-        person.setName(personRequest.getName());
-        person.setLast_name(personRequest.getLast_name());
-        person.setDocument_type(personRequest.getDocument_type());
-        person.setDocument_number(personRequest.getDocument_number());
-        person.setPhone(personRequest.getPhone());
-        person.setEmail(personRequest.getEmail());
-        person.setRole(personRequest.getRole());
-        person.setStreet(personRequest.getStreet());
+        person.setUbigeo_code(safeTrim(personRequest.getUbigeo_code()));
+        person.setName(safeTrim(personRequest.getName()));
+        person.setLast_name(safeTrim(personRequest.getLast_name()));
+        person.setDocument_type(safeTrim(personRequest.getDocument_type()));
+        person.setDocument_number(docNum);
+        person.setPhone(safeTrim(personRequest.getPhone()));
+        person.setEmail(email);
+        person.setRole(safeTrim(personRequest.getRole()));
+        person.setStreet(safeTrim(personRequest.getStreet()));
         // Validar que la contraseña esté presente al crear
         if (personRequest.getPassword() == null || personRequest.getPassword().isBlank()) {
             throw new RuntimeException("La contraseña es obligatoria al registrar una persona");
         }
         // Hashear la contraseña antes de guardar
         person.setPassword(passwordEncoder.encode(personRequest.getPassword()));
-        person.setState(personRequest.getState() != null ? personRequest.getState() : "A");
+        person.setState(personRequest.getState() != null ? safeTrim(personRequest.getState()) : "A");
         person.setCreated_date(LocalDateTime.now());
 
         Person saved = personRepository.save(person);
@@ -90,32 +93,38 @@ public class PersonServiceImpl implements PersonService {
         Person existente = personRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada con id: " + id));
 
-        // Validar email único (si cambió)
-        if (!existente.getEmail().equals(personRequest.getEmail()) &&
-            personRepository.findByEmail(personRequest.getEmail()).isPresent()) {
-            throw new RuntimeException("El correo electrónico ya está registrado");
+        // Validar email único (ignorar el de la misma persona)
+        String requestEmail = safeTrim(personRequest.getEmail());
+        if (requestEmail != null) {
+            Optional<Person> personWithEmail = personRepository.findByEmail(requestEmail);
+            if (personWithEmail.isPresent() && !personWithEmail.get().getId().equals(id)) {
+                throw new RuntimeException("El correo electrónico ya está registrado");
+            }
         }
 
-        // Validar documento único (si cambió)
-        if (!existente.getDocument_number().equals(personRequest.getDocument_number()) &&
-            personRepository.findByDocumentNumber(personRequest.getDocument_number()).isPresent()) {
-            throw new RuntimeException("El número de documento ya está registrado");
+        // Validar documento único (ignorar el de la misma persona)
+        String requestDocNum = safeTrim(personRequest.getDocument_number());
+        if (requestDocNum != null) {
+            Optional<Person> personWithDoc = personRepository.findByDocumentNumber(requestDocNum);
+            if (personWithDoc.isPresent() && !personWithDoc.get().getId().equals(id)) {
+                throw new RuntimeException("El número de documento ya está registrado");
+            }
         }
 
-        existente.setUbigeo_code(personRequest.getUbigeo_code());
-        existente.setName(personRequest.getName());
-        existente.setLast_name(personRequest.getLast_name());
-        existente.setDocument_type(personRequest.getDocument_type());
-        existente.setDocument_number(personRequest.getDocument_number());
-        existente.setPhone(personRequest.getPhone());
-        existente.setEmail(personRequest.getEmail());
-        existente.setRole(personRequest.getRole());
-        existente.setStreet(personRequest.getStreet());
+        existente.setUbigeo_code(safeTrim(personRequest.getUbigeo_code()));
+        existente.setName(safeTrim(personRequest.getName()));
+        existente.setLast_name(safeTrim(personRequest.getLast_name()));
+        existente.setDocument_type(safeTrim(personRequest.getDocument_type()));
+        existente.setDocument_number(requestDocNum);
+        existente.setPhone(safeTrim(personRequest.getPhone()));
+        existente.setEmail(requestEmail);
+        existente.setRole(safeTrim(personRequest.getRole()));
+        existente.setStreet(safeTrim(personRequest.getStreet()));
         // Hashear la nueva contraseña solo si fue enviada
         if (personRequest.getPassword() != null && !personRequest.getPassword().isBlank()) {
             existente.setPassword(passwordEncoder.encode(personRequest.getPassword()));
         }
-        existente.setState(personRequest.getState());
+        existente.setState(safeTrim(personRequest.getState()));
         existente.setUpdate_date(LocalDateTime.now());
 
         Person updated = personRepository.save(existente);
@@ -185,5 +194,9 @@ public class PersonServiceImpl implements PersonService {
                 .password(null) // No exponer la contraseña hasheada en las respuestas
                 .state(person.getState())
                 .build();
+    }
+
+    private String safeTrim(String str) {
+        return str == null ? null : str.trim();
     }
 }
