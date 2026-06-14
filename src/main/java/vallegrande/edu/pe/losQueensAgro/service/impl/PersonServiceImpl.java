@@ -70,6 +70,10 @@ public class PersonServiceImpl implements PersonService {
         person.setEmail(personRequest.getEmail());
         person.setRole(personRequest.getRole());
         person.setStreet(personRequest.getStreet());
+        // Validar que la contraseña esté presente al crear
+        if (personRequest.getPassword() == null || personRequest.getPassword().isBlank()) {
+            throw new RuntimeException("La contraseña es obligatoria al registrar una persona");
+        }
         // Hashear la contraseña antes de guardar
         person.setPassword(passwordEncoder.encode(personRequest.getPassword()));
         person.setState(personRequest.getState() != null ? personRequest.getState() : "A");

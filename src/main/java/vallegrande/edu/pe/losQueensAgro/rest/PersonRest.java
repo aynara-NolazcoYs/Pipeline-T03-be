@@ -52,24 +52,24 @@ public class PersonRest {
     //Mapperar Endpoint Registrar - tipo POST en POSTMAN
     @PostMapping("/save")
     @Operation(summary = "Save Person", description = "Save Person with validation")
-    public ResponseEntity<PersonRequest> save(@Valid @RequestBody PersonRequest personRequest) {
+    public ResponseEntity<?> save(@Valid @RequestBody PersonRequest personRequest) {
         try {
             PersonRequest saved = personService.save(personRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     //Mapear Endpoint Actualizar - tipo PUT en POSTMAN
     @PutMapping("/update/{id}")
     @Operation(summary = "Update Person", description = "Update Person with validation")
-    public ResponseEntity<PersonRequest> update(@PathVariable Long id, @Valid @RequestBody PersonRequest personRequest) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody PersonRequest personRequest) {
         try {
             PersonRequest updated = personService.update(id, personRequest);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
