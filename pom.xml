@@ -8,9 +8,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.14</version>
-        <relativePath/>
-    </parent>
+        <relativePath/> </parent>
 
+    <groupId>com.example</groupId> 
+    <artifactId>Pipeline-T03-be</artifactId> <version>0.0.1-SNAPSHOT</version>
+    <name>Pipeline-T03-be</name>
+    <description>Demo project for Spring Boot and Trivy</description>
     <properties>
         <java.version>25</java.version>
         <tomcat.version>10.1.55</tomcat.version>
