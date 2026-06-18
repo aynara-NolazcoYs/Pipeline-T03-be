@@ -45,7 +45,8 @@ public class PersonRequest {
     private String ubigeo_code;
 
     @NotBlank(message = "El rol es obligatorio")
-    @Pattern(regexp = "ADMIN|VENDEDOR|ALMACENERO|CLIENTE|PROVEEDOR", message = "Rol no válido")
+    @Size(max = 3, message = "El rol debe tener máximo 3 caracteres")
+    @Pattern(regexp = "ADM|VEN|ALM|CLI|PRO", message = "Rol no válido (ADM, VEN, ALM, CLI, PRO)")
     private String role;
 
     @Size(max = 150, message = "La calle no debe exceder 150 caracteres")
