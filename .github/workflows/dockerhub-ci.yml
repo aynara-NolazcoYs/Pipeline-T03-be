@@ -1,37 +1,38 @@
-name: Security Scan with Trivy (Spring Boot)
+name: Docker Hub
 
 on:
   push:
     branches:
       - develop
-  pull_request:
-    branches:
-      - develop
 
 jobs:
-  trivy-scan:
-    name: Build and Vulnerability Scan
+  build-and-push:
+    name: Build Docker Image and Push to DockerHub
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 25
-        uses: actions/setup-java@v4
-        with:
-          java-version: '25'
-          distribution: 'temurin'
-          cache: 'maven'
+      # 2. Configurar el motor de Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
-
-      - name: Run Trivy Vulnerability Scanner
-        uses: aquasecurity/trivy-action@master
+      # 3. Iniciar sesión en DockerHub usando tus secretos personalizados
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'table'
-          severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
-          exit-code: '1'
+          username: ${{ secrets.DOCKERHUB_USERNAME_AYNARA }}
+          password: ${{ secrets.DOCKERHUB_TOKEN_AYNARA }}
+
+      # 4. Construir la imagen usando la ruta del entregable (dockerfile-juan/Dockerfile)
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./dockerfile-juan/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME_AYNARA }}/pipeline-t03-be:latest
+            ${{ secrets.DOCKERHUB_USERNAME_AYNARA }}/pipeline-t03-be:${{ github.sha }}
