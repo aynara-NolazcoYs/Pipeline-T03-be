@@ -26,12 +26,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME_AYNARA }}
           password: ${{ secrets.DOCKERHUB_TOKEN_AYNARA }}
 
-      # 4. Construir la imagen usando la ruta del entregable (dockerfile-juan/Dockerfile)
+      # 4. Construir la imagen usando la ruta del entregable (dockerfile-aynara/Dockerfile)
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./dockerfile-juan/Dockerfile
+          file: ./dockerfile-aynara/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME_AYNARA }}/pipeline-t03-be:latest
